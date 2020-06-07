@@ -14,6 +14,7 @@ import {
   Left,
   Right,
   Body,
+  Fab,
 } from 'native-base';
 
 const pic = require('../assets/picts/avatar.jpg');
@@ -96,39 +97,24 @@ const datas = [
 export class Birthdays extends Component {
   render() {
     return (
-      <Container style={styles.container}>
-        <Header>
-          <Left>
-            {/* <Button transparent onPress={() => this.props.navigation.goBack()}>
-                <Icon name="arrow-back" />
-              </Button> */}
-          </Left>
-          <Body>
-            <Title style={styles.title}>Upcoming Birthdays</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content>
-          <List>
-            {datas.map((data, i) => (
-              <ListItem avatar>
-                <Left>
-                  <Thumbnail small source={data.img} />
-                </Left>
-                <Body>
-                  <Text>{data.text}</Text>
-                  <Text numberOfLines={1} note>
-                    {data.note}
-                  </Text>
-                </Body>
-                <Right>
-                  <Text note>{data.time}</Text>
-                </Right>
-              </ListItem>
-            ))}
-          </List>
-        </Content>
-      </Container>
+      <List>
+        {datas.map((data, i) => (
+          <ListItem key={i} avatar>
+            <Left>
+              <Thumbnail small source={data.img} />
+            </Left>
+            <Body>
+              <Text>{data.text}</Text>
+              <Text numberOfLines={1} note>
+                {data.note}
+              </Text>
+            </Body>
+            <Right>
+              <Text note>{data.time}</Text>
+            </Right>
+          </ListItem>
+        ))}
+      </List>
     );
   }
 }
@@ -136,9 +122,6 @@ export class Birthdays extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF',
-    width: '100%',
-  },
-  title: {
     width: '100%',
   },
 });
