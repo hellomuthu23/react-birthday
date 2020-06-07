@@ -17,12 +17,14 @@ import Home from './components/home';
 //     </Router>
 //   );
 // }
-
-export default class App extends React.Component {
+interface AppState {
+  loading: boolean;
+}
+export default class App extends React.Component<{}, AppState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isReady: false,
+      loading: true,
     };
   }
 
@@ -36,9 +38,9 @@ export default class App extends React.Component {
   }
 
   render() {
-    // if (!this.state.isReady) {
-    //   return <AppLoading />;
-    // }
+    if (this.state.loading) {
+      return <AppLoading />;
+    }
 
     return (
       <Router>
