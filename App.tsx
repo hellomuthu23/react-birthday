@@ -1,30 +1,24 @@
 import React from 'react';
-import { Birthdays } from './components/birthdays';
+import { Birthday } from './models/birthday.model';
 import AddBirthday from './components/add-birthday';
+import Birthdays from './components/birthdays';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import { Router, Scene } from 'react-native-router-flux';
 import Home from './components/home';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducers from './state/birthdays.reducers';
 
-// export default function App() {
-//   return (
-//     <Router>
-//       <Scene key='root'>
-//         <Scene key='Home' component={Home} initial={true} />
-//         <Scene key='Birthdays' component={Birthdays} title='Birthdays' />
-//         <Scene key='AddBirthday' component={AddBirthday} title='Add Birthday' />
-//       </Scene>
-//     </Router>
-//   );
-// }
 interface AppState {
   loading: boolean;
 }
+const store = createStore(reducers);
 export default class App extends React.Component<{}, AppState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      loading: true,
+      loading: false,
     };
   }
 
@@ -43,13 +37,15 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     return (
-      <Router>
-        <Scene key='root'>
-          <Scene key='Home' component={Home} initial={true} />
-          <Scene key='Birthdays' component={Birthdays} title='Birthdays' />
-          <Scene key='AddBirthday' component={AddBirthday} title='Add Birthday' />
-        </Scene>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <Scene key='root'>
+            <Scene key='Home' component={Home} initial={true} />
+            <Scene key='Birthdays' component={Birthdays} title='Birthdays' />
+            <Scene key='AddBirthday' component={AddBirthday} title='Add Birthday' />
+          </Scene>
+        </Router>
+      </Provider>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ListView, Alert } from 'react-native';
 import {
   Container,
   Header,
@@ -16,101 +16,79 @@ import {
   Body,
   Fab,
 } from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addBirthday } from '../state/birthdays.actions';
+import { Birthday } from '../models/birthday.model';
 
 const pic = require('../assets/picts/avatar.jpg');
 
-const datas = [
-  {
-    img: pic,
-    text: 'Kumar Pratik',
-    note: 'Its time to build a difference . .',
-    time: '3:43 pm',
-  },
-  {
-    img: pic,
-    text: 'Kumar Sanket',
-    note: 'One needs courage to be happy and smiling all time . . ',
-    time: '1:12 pm',
-  },
-  {
-    img: pic,
-    text: 'Megha',
-    note: 'Live a life style that matchs your vision',
-    time: '10:03 am',
-  },
-  {
-    img: pic,
-    text: 'Atul Ranjan',
-    note: 'Failure is temporary, giving up makes it permanent',
-    time: '5:47 am',
-  },
-  {
-    img: pic,
-    text: 'Saurabh Sahu',
-    note: 'The biggest risk is a missed opportunity !!',
-    time: '11:11 pm',
-  },
-  {
-    img: pic,
-    text: 'Varun Sahu',
-    note: 'Wish I had a Time machine . .',
-    time: '8:54 pm',
-  },
-  {
-    img: pic,
-    text: 'Kumar Pratik',
-    note: 'Its time to build a difference . .',
-    time: '3:43 pm',
-  },
-  {
-    img: pic,
-    text: 'Kumar Sanket',
-    note: 'One needs courage to be happy and smiling all time . . ',
-    time: '1:12 pm',
-  },
-  {
-    img: pic,
-    text: 'Megha',
-    note: 'Live a life style that matchs your vision',
-    time: '10:03 am',
-  },
-  {
-    img: pic,
-    text: 'Atul Ranjan',
-    note: 'Failure is temporary, giving up makes it permanent',
-    time: '5:47 am',
-  },
-  {
-    img: pic,
-    text: 'Saurabh Sahu',
-    note: 'The biggest risk is a missed opportunity !!',
-    time: '11:11 pm',
-  },
-  {
-    img: pic,
-    text: 'Varun Sahu',
-    note: 'Wish I had a Time machine . .',
-    time: '8:54 pm',
-  },
-];
+interface Props {
+  birthdays: {
+    birthdays: Birthday[];
+    loading: boolean;
+  };
+}
+interface BirthdaysState {
+  chosenDate: Date;
+}
 
-export class Birthdays extends Component {
+interface BirthdayView {
+  name: string;
+  date: string;
+}
+class Birthdays extends Component<Props, BirthdaysState> {
+  birthdays: BirthdayView[] = [];
+
+  constructor(props: any) {
+    super(props);
+    const dateDisplayOptions: any = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    this.birthdays.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    this.birthdays = this.props.birthdays.birthdays.map((v) => {
+      const formattedDate = this.getDisplayDate(v.date);
+
+      const birthdayView = { name: v.name, date: formattedDate };
+      return birthdayView;
+    });
+  }
+
+  private getDisplayDate(date: Date): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const formattedDate = `${date.getDate()} ${months[date.getMonth()]} `;
+    console.log(formattedDate);
+    return formattedDate;
+  }
+
   render() {
     return (
       <List>
-        {datas.map((data, i) => (
+        {this.birthdays.map((data, i) => (
           <ListItem key={i} avatar>
             <Left>
-              <Thumbnail small source={data.img} />
+              <Thumbnail small source={pic} />
             </Left>
             <Body>
-              <Text>{data.text}</Text>
-              <Text numberOfLines={1} note>
-                {data.note}
-              </Text>
+              <Text>{data.name}</Text>
             </Body>
             <Right>
-              <Text note>{data.time}</Text>
+              <Text note>{data.date}</Text>
             </Right>
           </ListItem>
         ))}
@@ -126,4 +104,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Birthdays;
+function mapStateToProps(state: any) {
+  return {
+    birthdays: state.birthdays,
+  };
+}
+function matchDispatchToProps(dispatch: any) {
+  return bindActionCreators({ addBirthday: addBirthday }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(Birthdays);
