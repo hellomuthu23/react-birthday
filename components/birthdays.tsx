@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ListView, Alert } from 'react-native';
+import { StyleSheet, ListView, Alert, ScrollView } from 'react-native';
 import {
   Container,
   Header,
@@ -108,21 +108,23 @@ class Birthdays extends Component<Props, BirthdaysState> {
   render() {
     return (
       <Container>
-        <List>
-          {this.birthdays.map((data, i) => (
-            <ListItem key={i} avatar>
-              <Left>
-                <Thumbnail small source={pic} />
-              </Left>
-              <Body>
-                <Text>{data.name}</Text>
-              </Body>
-              <Right>
-                <Text note>{data.date}</Text>
-              </Right>
-            </ListItem>
-          ))}
-        </List>
+        <ScrollView>
+          <List>
+            {this.birthdays.map((data, i) => (
+              <ListItem key={i} avatar>
+                <Left>
+                  <Thumbnail small source={pic} />
+                </Left>
+                <Body>
+                  <Text>{data.name}</Text>
+                </Body>
+                <Right>
+                  <Text note>{data.date}</Text>
+                </Right>
+              </ListItem>
+            ))}
+          </List>
+        </ScrollView>
         <Fab
           position='bottomRight'
           onPress={() => {
