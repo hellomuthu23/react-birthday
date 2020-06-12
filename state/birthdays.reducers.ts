@@ -7,7 +7,7 @@ interface InitialState {
   loading: boolean;
 }
 const INITIAL_STATE: InitialState = {
-  birthdays: [],
+  birthdays: [{ name: 'Muthu', date: new Date() }],
   loading: false,
 };
 

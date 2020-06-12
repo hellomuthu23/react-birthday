@@ -15,6 +15,7 @@ import {
   Icon,
 } from 'native-base';
 
+import Birthdays from './birthdays';
 interface Props {
   navigation: { navigate: (screen: string) => void };
 }
@@ -22,33 +23,6 @@ class Home extends Component<Props, {}> {
   render() {
     return (
       <Container>
-        <Header>
-          {/* <Left /> */}
-          <Body>
-            <Title>Upcoming Birthdays....</Title>
-          </Body>
-          {/* <Right /> */}
-        </Header>
-        <Content
-          contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 40,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Card></Card>
-          <Button
-            dark
-            block
-            onPress={() => {
-              this.props.navigation.navigate('Birthdays');
-            }}
-            style={{ marginTop: 40 }}
-          >
-            <Text>View All Birthdays</Text>
-          </Button>
-        </Content>
         <Fab
           position='bottomRight'
           onPress={() => {

@@ -50,9 +50,8 @@ export default class App extends React.Component<{}, AppState> {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name='Home' component={Home} options={{ title: 'My home' }} />
-            <Stack.Screen name='Birthdays' component={Birthdays} />
-            <Stack.Screen name='AddBirthday' component={AddBirthday} />
+            <Stack.Screen name='Birthdays' component={Birthdays} options={{ title: 'Birthday Reminder' }} />
+            <Stack.Screen name='AddBirthday' component={AddBirthday} options={{ title: 'Add Birthday' }} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

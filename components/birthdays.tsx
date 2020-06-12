@@ -21,7 +21,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
-
+import { NavigationEvents } from 'react-navigation';
+import { Notifications } from 'react-native-notifications';
 const pic = require('../assets/picts/avatar.jpg');
 
 interface Props {
@@ -29,6 +30,7 @@ interface Props {
     birthdays: Birthday[];
     loading: boolean;
   };
+  navigation: { navigate: (screen: string) => void; addListener: any };
 }
 interface BirthdaysState {
   chosenDate: Date;
@@ -38,13 +40,40 @@ interface BirthdayView {
   name: string;
   date: string;
 }
+
 class Birthdays extends Component<Props, BirthdaysState> {
   birthdays: BirthdayView[] = [];
 
   constructor(props: any) {
     super(props);
-    const dateDisplayOptions: any = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    this.loadBirthDays();
+  }
 
+  notify() {
+    Notifications.postLocalNotification(
+      {
+        payload: 'ddd',
+        badge: 2,
+        body: 'dsfsdfsd',
+        identifier: '2',
+        sound: 'd',
+        title: 'muthu',
+        type: 'sd',
+        thread: 'd',
+      },
+      2
+    );
+  }
+
+  componentDidMount() {
+    console.log('hhhh');
+    this.props.navigation.addListener('focus', () => {
+      console.log('dd');
+      this.loadBirthDays();
+      this.forceUpdate();
+    });
+  }
+  loadBirthDays() {
     this.birthdays.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
     this.birthdays = this.props.birthdays.birthdays.map((v) => {
       const formattedDate = this.getDisplayDate(v.date);
@@ -78,21 +107,31 @@ class Birthdays extends Component<Props, BirthdaysState> {
 
   render() {
     return (
-      <List>
-        {this.birthdays.map((data, i) => (
-          <ListItem key={i} avatar>
-            <Left>
-              <Thumbnail small source={pic} />
-            </Left>
-            <Body>
-              <Text>{data.name}</Text>
-            </Body>
-            <Right>
-              <Text note>{data.date}</Text>
-            </Right>
-          </ListItem>
-        ))}
-      </List>
+      <Container>
+        <List>
+          {this.birthdays.map((data, i) => (
+            <ListItem key={i} avatar>
+              <Left>
+                <Thumbnail small source={pic} />
+              </Left>
+              <Body>
+                <Text>{data.name}</Text>
+              </Body>
+              <Right>
+                <Text note>{data.date}</Text>
+              </Right>
+            </ListItem>
+          ))}
+        </List>
+        <Fab
+          position='bottomRight'
+          onPress={() => {
+            this.props.navigation.navigate('AddBirthday');
+          }}
+        >
+          <Icon name='md-add'></Icon>
+        </Fab>
+      </Container>
     );
   }
 }
