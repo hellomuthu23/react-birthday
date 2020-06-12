@@ -1,5 +1,5 @@
 import React from 'react';
-import { Birthday } from './models/birthday.model';
+import { Image } from 'react-native';
 import AddBirthday from './components/add-birthday';
 import Birthdays from './components/birthdays';
 import * as Font from 'expo-font';
@@ -9,16 +9,22 @@ import Home from './components/home';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducers from './state/birthdays.reducers';
+import { View } from 'native-base';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import 'react-native-gesture-handler';
 
 interface AppState {
   loading: boolean;
 }
 const store = createStore(reducers);
+const Stack = createStackNavigator();
+
 export default class App extends React.Component<{}, AppState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
     };
   }
 
@@ -28,23 +34,27 @@ export default class App extends React.Component<{}, AppState> {
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       Ionicons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf'),
     });
-    this.setState({ loading: false });
+    setTimeout(() => this.setState({ loading: false }), 5000);
   }
 
   render() {
     if (this.state.loading) {
-      return <AppLoading />;
+      return (
+        <View style={{ flex: 1 }}>
+          <Image style={{ width: '100%', height: '100%' }} source={require('./assets/splash/splash.png')} />
+        </View>
+      );
     }
 
     return (
       <Provider store={store}>
-        <Router>
-          <Scene key='root'>
-            <Scene key='Home' component={Home} initial={true} />
-            <Scene key='Birthdays' component={Birthdays} title='Birthdays' />
-            <Scene key='AddBirthday' component={AddBirthday} title='Add Birthday' />
-          </Scene>
-        </Router>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name='Home' component={Home} options={{ title: 'My home' }} />
+            <Stack.Screen name='Birthdays' component={Birthdays} />
+            <Stack.Screen name='AddBirthday' component={AddBirthday} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
     );
   }

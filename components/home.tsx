@@ -14,18 +14,20 @@ import {
   Fab,
   Icon,
 } from 'native-base';
-import { Actions } from 'react-native-router-flux';
 
-class Home extends Component {
+interface Props {
+  navigation: { navigate: (screen: string) => void };
+}
+class Home extends Component<Props, {}> {
   render() {
     return (
       <Container>
         <Header>
-          <Left />
+          {/* <Left /> */}
           <Body>
-            <Title>Birthday Remainder App</Title>
+            <Title>Upcoming Birthdays....</Title>
           </Body>
-          <Right />
+          {/* <Right /> */}
         </Header>
         <Content
           contentContainerStyle={{
@@ -35,29 +37,22 @@ class Home extends Component {
             paddingHorizontal: 10,
           }}
         >
-          <Card>
-            <CardItem>
-              <Text>Birthday Reminders</Text>
-            </CardItem>
-            <CardItem>
-              <Text>View Upcoming Birthdays</Text>
-            </CardItem>
-          </Card>
+          <Card></Card>
           <Button
             dark
             block
             onPress={() => {
-              Actions.Birthdays();
+              this.props.navigation.navigate('Birthdays');
             }}
             style={{ marginTop: 40 }}
           >
-            <Text>View Birthdays</Text>
+            <Text>View All Birthdays</Text>
           </Button>
         </Content>
         <Fab
           position='bottomRight'
           onPress={() => {
-            Actions.AddBirthday();
+            this.props.navigation.navigate('AddBirthday');
           }}
         >
           <Icon name='md-add'></Icon>

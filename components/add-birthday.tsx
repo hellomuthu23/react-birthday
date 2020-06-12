@@ -28,8 +28,7 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
 
   handleSave(value: Birthday) {
     this.props.addBirthday(value);
-    this.props.navigation.navigate('Birthdays');
-    console.log('ss');
+    this.props.navigation.navigate('Home');
   }
 
   render() {
