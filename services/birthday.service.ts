@@ -11,7 +11,6 @@ export class BirthdayService {
     birthdays.push(birthday);
     const jsonValue = JSON.stringify(birthdays);
     await AsyncStorage.setItem('@birthdays', jsonValue);
-    console.log('Birthday Added');
     return birthdays;
   }
 }

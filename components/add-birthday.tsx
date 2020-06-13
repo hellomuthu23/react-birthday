@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Item, Input, Button, Text, DatePicker, Toast } from 'native-base';
 import { Formik } from 'formik';
@@ -8,8 +7,6 @@ import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import { TouchableOpacity } from 'react-native';
 
 interface Props {
   addBirthday: (birthday: Birthday) => void;
@@ -53,7 +50,7 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
               <Input
                 value={values.name}
                 onChangeText={handleChange('name')}
-                onBlur={() => setFieldTouched('name')}
+                // onBlur={() => setFieldTouched('name')}
                 placeholder='Name'
               />
               {touched.name && errors.name && <Text style={{ fontSize: 10, color: 'red' }}>{errors.name}</Text>}

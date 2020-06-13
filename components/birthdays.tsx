@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
 import { Notifications } from 'expo';
-// eslint-disable-next-line
+// @ts-ignore
 import UserAvatar from 'react-native-user-avatar';
 
 const pic = require('../assets/picts/avatar.jpg');
@@ -40,28 +40,37 @@ class Birthdays extends Component<Props, BirthdaysState> {
     Notifications.presentLocalNotificationAsync({
       body: 'Muhussd',
       title: 'Birthday Reminder',
-      // android: { icon: favicon },
-      // data: "It's Muthu's Birthday, wish him",
     });
   }
 
   componentDidMount() {
-    console.log('hhhh');
     this.props.navigation.addListener('focus', () => {
-      console.log('dd');
       this.loadBirthDays();
       this.forceUpdate();
     });
     this.notify();
   }
+
   loadBirthDays() {
+    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
+
+    // calculate due date and update
+    let dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() - 1);
+    this.props.birthdays.birthdays.map((val) => {
+      val.date < dueDate
+        ? val.date.setFullYear(dueDate.getFullYear() + 1)
+        : val.date.setFullYear(dueDate.getFullYear());
+
+      return val;
+    });
+    this.props.birthdays.birthdays.sort((a, b) => +a.date - +dueDate);
     this.birthdays = this.props.birthdays.birthdays.map((v) => {
       const formattedDate = this.getDisplayDate(v.date);
 
       const birthdayView = { name: v.name, date: formattedDate };
       return birthdayView;
     });
-    this.birthdays.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   }
 
   private getDisplayDate(date: Date): string {
@@ -82,7 +91,6 @@ class Birthdays extends Component<Props, BirthdaysState> {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const formattedDate = `${date.getDate()}/${months[date.getMonth()]} `;
-    console.log(formattedDate);
     return formattedDate;
   }
 
