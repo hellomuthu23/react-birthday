@@ -1,30 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, ListView, Alert, ScrollView } from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Icon,
-  List,
-  ListItem,
-  Text,
-  Thumbnail,
-  Left,
-  Right,
-  Body,
-  Fab,
-} from 'native-base';
-import AsyncStorage from '@react-native-community/async-storage';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Container, Icon, List, ListItem, Text, Thumbnail, Left, Right, Body, Fab } from 'native-base';
+import { Image } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
-import { NavigationEvents } from 'react-navigation';
-import { Notifications } from 'react-native-notifications';
-const pic = require('../assets/picts/avatar.jpg');
+import { Notifications } from 'expo';
+// eslint-disable-next-line
+import UserAvatar from 'react-native-user-avatar';
 
+const pic = require('../assets/picts/avatar.jpg');
+const favicon = require('../assets/picts/favicon.png');
 interface Props {
   birthdays: {
     birthdays: Birthday[];
@@ -50,19 +37,12 @@ class Birthdays extends Component<Props, BirthdaysState> {
   }
 
   notify() {
-    Notifications.postLocalNotification(
-      {
-        payload: 'ddd',
-        badge: 2,
-        body: 'dsfsdfsd',
-        identifier: '2',
-        sound: 'd',
-        title: 'muthu',
-        type: 'sd',
-        thread: 'd',
-      },
-      2
-    );
+    Notifications.presentLocalNotificationAsync({
+      body: 'Muhussd',
+      title: 'Birthday Reminder',
+      // android: { icon: favicon },
+      // data: "It's Muthu's Birthday, wish him",
+    });
   }
 
   componentDidMount() {
@@ -72,15 +52,16 @@ class Birthdays extends Component<Props, BirthdaysState> {
       this.loadBirthDays();
       this.forceUpdate();
     });
+    this.notify();
   }
   loadBirthDays() {
-    this.birthdays.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
     this.birthdays = this.props.birthdays.birthdays.map((v) => {
       const formattedDate = this.getDisplayDate(v.date);
 
       const birthdayView = { name: v.name, date: formattedDate };
       return birthdayView;
     });
+    this.birthdays.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   }
 
   private getDisplayDate(date: Date): string {
@@ -100,7 +81,7 @@ class Birthdays extends Component<Props, BirthdaysState> {
     ];
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    const formattedDate = `${date.getDate()} ${months[date.getMonth()]} `;
+    const formattedDate = `${date.getDate()}/${months[date.getMonth()]} `;
     console.log(formattedDate);
     return formattedDate;
   }
@@ -108,12 +89,18 @@ class Birthdays extends Component<Props, BirthdaysState> {
   render() {
     return (
       <Container>
+        {this.birthdays.length === 0 && (
+          <Container style={styles.emptyContainer}>
+            <Image source={favicon}></Image>
+            <Text>Start adding birthdays</Text>
+          </Container>
+        )}
         <ScrollView>
           <List>
             {this.birthdays.map((data, i) => (
               <ListItem key={i} avatar>
                 <Left>
-                  <Thumbnail small source={pic} />
+                  <UserAvatar size={30} name={data.name} />
                 </Left>
                 <Body>
                   <Text>{data.name}</Text>
@@ -130,6 +117,7 @@ class Birthdays extends Component<Props, BirthdaysState> {
           onPress={() => {
             this.props.navigation.navigate('AddBirthday');
           }}
+          style={{ backgroundColor: '#f4511e' }}
         >
           <Icon name='md-add'></Icon>
         </Fab>
@@ -139,10 +127,7 @@ class Birthdays extends Component<Props, BirthdaysState> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFF',
-    width: '100%',
-  },
+  emptyContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 function mapStateToProps(state: any) {

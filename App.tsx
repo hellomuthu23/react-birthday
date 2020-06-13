@@ -3,13 +3,10 @@ import { Image } from 'react-native';
 import AddBirthday from './components/add-birthday';
 import Birthdays from './components/birthdays';
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
-import { Router, Scene } from 'react-native-router-flux';
-import Home from './components/home';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducers from './state/birthdays.reducers';
-import { View } from 'native-base';
+import { View, Root } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
@@ -47,14 +44,26 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name='Birthdays' component={Birthdays} options={{ title: 'Birthday Reminder' }} />
-            <Stack.Screen name='AddBirthday' component={AddBirthday} options={{ title: 'Add Birthday' }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <Root>
+        <Provider store={store}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name='Birthdays'
+                component={Birthdays}
+                options={{
+                  title: 'Birthday Reminder',
+                  headerStyle: {
+                    backgroundColor: '#f4511e',
+                  },
+                  headerTintColor: '#fff',
+                }}
+              />
+              <Stack.Screen name='AddBirthday' component={AddBirthday} options={{ title: 'Add Birthday' }} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
+      </Root>
     );
   }
 }

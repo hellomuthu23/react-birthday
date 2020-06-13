@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { Item, Input, Button, Text, DatePicker } from 'native-base';
+import { Item, Input, Button, Text, DatePicker, Toast } from 'native-base';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { addBirthday } from '../state/birthdays.actions';
@@ -28,6 +28,12 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
 
   handleSave(value: Birthday) {
     this.props.addBirthday(value);
+    Toast.show({
+      text: 'Birthday Added!',
+      buttonText: 'ok',
+      duration: 1000,
+      type: 'success',
+    });
     this.props.navigation.navigate('Birthdays');
   }
 
