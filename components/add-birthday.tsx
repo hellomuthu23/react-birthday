@@ -7,6 +7,7 @@ import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { TextInput } from 'react-native';
 
 interface Props {
   addBirthday: (birthday: Birthday) => void;
@@ -44,16 +45,16 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
           date: yup.date().required(),
         })}
       >
-        {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit, setFieldValue }) => (
+        {({ values, handleChange, errors, handleBlur, touched, isValid, handleSubmit, setFieldValue }) => (
           <Fragment>
             <Item>
-              <Input
+              <TextInput
+                style={{ height: 50, fontSize: 16, width: '100%', paddingLeft: 10 }}
                 value={values.name}
                 onChangeText={handleChange('name')}
-                // onBlur={() => setFieldTouched('name')}
-                placeholder='Name'
+                onBlur={handleBlur('name')}
+                placeholder='Name*'
               />
-              {touched.name && errors.name && <Text style={{ fontSize: 10, color: 'red' }}>{errors.name}</Text>}
             </Item>
             <Item>
               <DatePicker
@@ -64,7 +65,10 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
                 animationType={'fade'}
                 androidMode={'spinner'}
                 placeHolderText='Select date'
-                placeHolderTextStyle={{ color: '#d3d3d3' }}
+                placeHolderTextStyle={{
+                  color: '#d3d3d3',
+                  width: '100%',
+                }}
                 onDateChange={(date) => setFieldValue('date', date)}
                 disabled={false}
               />
