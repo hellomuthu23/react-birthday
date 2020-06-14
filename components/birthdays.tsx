@@ -6,9 +6,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { addBirthday } from '../state/birthdays.actions';
 import { Birthday } from '../models/birthday.model';
-import { Notifications } from 'expo';
+
 // @ts-ignore
 import UserAvatar from 'react-native-user-avatar';
+import { NotificationService } from '../services/notification.service';
 
 const pic = require('../assets/picts/avatar.jpg');
 const favicon = require('../assets/picts/favicon.png');
@@ -37,40 +38,50 @@ class Birthdays extends Component<Props, BirthdaysState> {
   }
 
   notify() {
-    Notifications.presentLocalNotificationAsync({
-      body: 'Muhussd',
-      title: 'Birthday Reminder',
+    const today = new Date();
+    this.props.birthdays.birthdays.map((birthday) => {
+      if (birthday.date.getDate() === today.getDate()) {
+        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} today, remember to wish`);
+      }
+      if (birthday.date.getDate() === today.getDate() + 1) {
+        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} tomorrow, remember to wish`);
+      }
     });
   }
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.loadBirthDays();
-      this.forceUpdate();
     });
     this.notify();
   }
 
   loadBirthDays() {
-    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
+    this.sortBirthday(this.props.birthdays.birthdays);
 
-    // calculate due date and update
-    let dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() - 1);
-    this.props.birthdays.birthdays.map((val) => {
-      val.date < dueDate
-        ? val.date.setFullYear(dueDate.getFullYear() + 1)
-        : val.date.setFullYear(dueDate.getFullYear());
-
-      return val;
-    });
-    this.props.birthdays.birthdays.sort((a, b) => +a.date - +dueDate);
+    // Map birthdays to view mode
     this.birthdays = this.props.birthdays.birthdays.map((v) => {
       const formattedDate = this.getDisplayDate(v.date);
 
       const birthdayView = { name: v.name, date: formattedDate };
       return birthdayView;
     });
+  }
+
+  private sortBirthday(birthdays: Birthday[]) {
+    // sort birthdays in asc order
+    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
+
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() - 1);
+    birthdays.map((val) => {
+      +val.date < +dueDate
+        ? val.date.setFullYear(dueDate.getFullYear() + 1)
+        : val.date.setFullYear(dueDate.getFullYear());
+
+      return val;
+    });
+    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
   }
 
   private getDisplayDate(date: Date): string {
