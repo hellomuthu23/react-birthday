@@ -31,6 +31,7 @@ interface BirthdayView {
 
 class Birthdays extends Component<Props, BirthdaysState> {
   birthdays: BirthdayView[] = [];
+  private _unsubscribe: any;
 
   constructor(props: any) {
     super(props);
@@ -41,26 +42,29 @@ class Birthdays extends Component<Props, BirthdaysState> {
     const today = new Date();
     this.props.birthdays.birthdays.map((birthday) => {
       if (birthday.date.getDate() === today.getDate()) {
-        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} today, remember to wish`);
+        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} birthday today, remember to wish`);
       }
       if (birthday.date.getDate() === today.getDate() + 1) {
-        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} tomorrow, remember to wish`);
+        NotificationService.notify(`Birthday Reminder`, `It's ${birthday.name} birthday tomorrow, remember to wish`);
       }
     });
   }
 
   componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.loadBirthDays();
+      this.notify();
+      this.forceUpdate();
     });
-    this.notify();
   }
 
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
   loadBirthDays() {
-    this.sortBirthday(this.props.birthdays.birthdays);
-
+    const sortedBirthdays = this.sortBirthday([...this.props.birthdays.birthdays]);
     // Map birthdays to view mode
-    this.birthdays = this.props.birthdays.birthdays.map((v) => {
+    this.birthdays = sortedBirthdays.map((v) => {
       const formattedDate = this.getDisplayDate(v.date);
 
       const birthdayView = { name: v.name, date: formattedDate };
@@ -70,18 +74,20 @@ class Birthdays extends Component<Props, BirthdaysState> {
 
   private sortBirthday(birthdays: Birthday[]) {
     // sort birthdays in asc order
-    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
+    birthdays.sort((a, b) => +a.date - +b.date);
 
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() - 1);
-    birthdays.map((val) => {
-      +val.date < +dueDate
-        ? val.date.setFullYear(dueDate.getFullYear() + 1)
-        : val.date.setFullYear(dueDate.getFullYear());
 
+    birthdays = birthdays.map((val) => {
+      val.date.setFullYear(dueDate.getFullYear());
+      if (val.date < dueDate) {
+        val.date.setFullYear(dueDate.getFullYear() + 1);
+      }
       return val;
     });
-    this.props.birthdays.birthdays.sort((a, b) => +a.date - +b.date);
+    birthdays.sort((a: any, b: any) => a.date - b.date);
+    return birthdays;
   }
 
   private getDisplayDate(date: Date): string {
@@ -139,6 +145,15 @@ class Birthdays extends Component<Props, BirthdaysState> {
           style={{ backgroundColor: '#f4511e' }}
         >
           <Icon name='md-add'></Icon>
+        </Fab>
+        <Fab
+          position='bottomLeft'
+          onPress={() => {
+            this.loadBirthDays();
+          }}
+          style={{ backgroundColor: '#f4511e' }}
+        >
+          <Icon name='md-refresh'></Icon>
         </Fab>
       </Container>
     );
