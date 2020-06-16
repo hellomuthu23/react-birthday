@@ -49,7 +49,8 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
           <Fragment>
             <Item>
               <TextInput
-                style={{ height: 50, fontSize: 16, width: '100%', paddingLeft: 10 }}
+                autoFocus={true}
+                style={{ height: 70, fontSize: 16, width: '100%', paddingLeft: 10 }}
                 value={values.name}
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
@@ -68,6 +69,7 @@ class AddBirthday extends Component<Props, AddBirthdayState> {
                 placeHolderTextStyle={{
                   color: '#d3d3d3',
                   width: '100%',
+                  height: 60,
                 }}
                 onDateChange={(date) => setFieldValue('date', date)}
                 disabled={false}

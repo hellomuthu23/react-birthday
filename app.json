@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "react-birthday",
-    "slug": "react-birthday",
+    "name": "Birthday Reminder",
+    "slug": "Birthday Reminder",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
