@@ -1,8 +1,12 @@
 {
   "expo": {
     "name": "Birthday Reminder",
-    "slug": "Birthday Reminder",
-    "platforms": ["ios", "android", "web"],
+    "slug": "birthday-reminder",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,13 +18,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.muthu.birthdayReminder",
       "versionCode": 1
-    }
+    },
+    "description": ""
   }
 }
