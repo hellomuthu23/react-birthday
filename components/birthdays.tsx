@@ -11,7 +11,6 @@ import { Birthday } from '../models/birthday.model';
 import UserAvatar from 'react-native-user-avatar';
 import { NotificationService } from '../services/notification.service';
 
-const pic = require('../assets/picts/avatar.jpg');
 const favicon = require('../assets/picts/favicon.png');
 interface Props {
   birthdays: {
