@@ -1,15 +1,14 @@
+import { Body, Container, Fab, Icon, Left, List, ListItem, Right, Text } from 'native-base';
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { Container, Icon, List, ListItem, Text, Thumbnail, Left, Right, Body, Fab } from 'native-base';
-import { Image } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { addBirthday } from '../state/birthdays.actions';
-import { Birthday } from '../models/birthday.model';
-
+import { Image, ScrollView, StyleSheet } from 'react-native';
 // @ts-ignore
 import UserAvatar from 'react-native-user-avatar';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { Birthday } from '../models/birthday.model';
 import { NotificationService } from '../services/notification.service';
+import { addBirthday } from '../state/birthdays.actions';
 
 const favicon = require('../assets/picts/favicon.png');
 interface Props {
@@ -124,7 +123,7 @@ class Birthdays extends Component<Props, BirthdaysState> {
             {this.birthdays.map((data, i) => (
               <ListItem key={i} avatar>
                 <Left>
-                  <UserAvatar size={30} name={data.name} />
+                  <UserAvatar key={i} size={30} name={data.name} />
                 </Left>
                 <Body>
                   <Text>{data.name}</Text>
