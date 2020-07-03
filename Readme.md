@@ -4,3 +4,4 @@
 
 - Add Birthdays
 - Notifications for upcoming birthdays(Today's and Tomorrow's)
+- Delete/Edit Dates
